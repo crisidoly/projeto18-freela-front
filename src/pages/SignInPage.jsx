@@ -1,14 +1,41 @@
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import CatImage from "../assets/login.jpg";
+import { useState } from "react";
+import axios from "axios";
 
 export default function SignInPage() {
+  let [email, setEmail] = useState('');
+  let [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  function singIn(e) {
+    e.preventDefault();
+    const entrar = { email, password };
+
+    axios.post(`${import.meta.env.VITE_API_URL}/signin`, entrar)
+      .then(res => {
+        localStorage.setItem("data", JSON.stringify(res.data));
+        navigate("/");
+      })
+      .catch(erro => alert(erro.response.data));
+  }
+
   return (
     <>
       <SignInContainer>
         <Info>
-          <Left></Left>
-          <Right bgImg={CatImage}></Right>       
+          <Left>
+            <Form onSubmit={e => singIn(e)}>
+              <input placeholder="E-mail" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
+              <input placeholder="Password" type="password" autoComplete="new-password" value={password} onChange={e => setPassword(e.target.value)} required />
+              <button type="submit"><ion-icon name="log-in-outline"></ion-icon> ENTRAR</button>
+              <Link to={"/signup"} >
+              Don't have an account? Register NOW!
+              </Link>
+            </Form>
+          </Left>
+          <Right bgImg={CatImage}></Right>
         </Info>
       </SignInContainer>
     </>
@@ -23,13 +50,11 @@ const SignInContainer = styled.section`
   align-items: center;
   justify-content: center;
   background-color: #010e25;
-  margin: 0;
-  padding: 0;
 `;
 
 const Info = styled.div`
-  height: 800px;
-  width: 1200px;
+  height: 600px;
+  width: 1000px;
   border-radius: 70px;
   border: solid 10px #ad00ff;
   display: flex;
@@ -39,19 +64,31 @@ const Left = styled.div`
   height: 100%;
   width: 50%;
   display: flex;
-  background-color: white;
+  flex-direction: column;
   border-radius: 60px 0 0 60px;
+  justify-content: space-around;
 `;
 
 const Right = styled.div`
   height: 100%;
   width: 50%;
-  border-radius: 12px;
-  background-color: black;
-  background: center/cover url(${(props) => props.bgImg.src}) no-repeat;
+  border-radius: 0 58px 58px 0;
+  display: flex;
+  background-image: url(${props => props.bgImg});
+  background-size: cover; 
+  background-position: center; 
+`;
 
-  @media screen and (max-width: 600px) {
-    width: 100%;
-    height: 100%;
+const Form = styled.form`
+
+  input {
+    background-color: transparent;
+    border: solid 2px #ad00ff; 
+    border-radius: 0px;
+    width: 80%;
+  }
+  
+  button {  
+    background-color: #ad00ff;
   }
 `;
