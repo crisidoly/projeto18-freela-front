@@ -9,13 +9,14 @@ export default function SignInPage() {
   let [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  function singIn(e) {
+  function signIn(e) {
     e.preventDefault();
-    const entrar = { email, password };
+    const enter = { email, password };
 
-    axios.post(`${import.meta.env.VITE_API_URL}/signin`, entrar)
+    axios.post(`${import.meta.env.VITE_API_URL}/signin`, enter)
       .then(res => {
-        localStorage.setItem("data", JSON.stringify(res.data));
+        localStorage.setItem("token", (res.data.token));
+        localStorage.setItem("userId", (res.data.userId))
         navigate("/");
       })
       .catch(erro => alert(erro.response.data));
@@ -26,7 +27,7 @@ export default function SignInPage() {
       <SignInContainer>
         <Info>
           <Left>
-            <Form onSubmit={e => singIn(e)}>
+            <Form onSubmit={signIn}>
               <input placeholder="E-mail" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
               <input placeholder="Password" type="password" autoComplete="new-password" value={password} onChange={e => setPassword(e.target.value)} required />
               <button type="submit"><ion-icon name="log-in-outline"></ion-icon> ENTRAR</button>

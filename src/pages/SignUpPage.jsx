@@ -13,13 +13,12 @@ export default function SignUpPage() {
     let [phoneNumber, setPhoneNumber] = useState('');
     const navigate = useNavigate();
   
-    function singUp(e) {
+    function signUp(e) {
       e.preventDefault();
       if (password != confirmPassword){
         alert('As senhas devem ser iguais!');
       } else {
         const cadastro = {name, cpf, email, password, confirmPassword, phoneNumber};
-        console.log(cadastro);
         axios.post(`${import.meta.env.VITE_API_URL}/signup`, cadastro)
               .then(res => navigate('/signin'))
               .catch(erro => alert(erro.response.data));
@@ -32,7 +31,7 @@ export default function SignUpPage() {
       <SignInContainer>
         <Info>
           <Left>
-          <Form onSubmit={e => singUp(e)}>
+          <Form onSubmit={signUp}>
                 <input placeholder="Nome" type="text" value={name} onChange={e => setName(e.target.value)} required/>
                 <input placeholder="CPF" type="text" value={cpf} onChange={e => setCpf(e.target.value)} required/>
                 <input placeholder="E-mail" type="email" value={email} onChange={e => setEmail(e.target.value)} required/>
